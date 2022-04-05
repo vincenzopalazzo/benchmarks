@@ -37,3 +37,7 @@ jobs:
           sudo cmake --build "build" --config Release --target install
     - name: Run V benchmark
       run: make vdep && make v
+    - uses: actions/upload-artifact@v3
+      with:
+        name: vlang-benchmark
+        path: vlang/*.json
