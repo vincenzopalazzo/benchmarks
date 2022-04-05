@@ -6,3 +6,6 @@ v:
 
 vfmt: 
 	v fmt -w .
+
+vdep:
+	v install --git https://github.com/vincenzopalazzo/vbenchmark.git
