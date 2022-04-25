@@ -1,6 +1,7 @@
 """Testing the implementation with some small input"""
 
-from benchamarks.bm.knapsack_dp import knapsack_dp, Entry
+from benchamarks.bm.knapsack_dp import knapsack_dp
+from benchamarks.bm.knapsack_comm import Entry
 
 
 def test_knapsack_dp_one() -> None:

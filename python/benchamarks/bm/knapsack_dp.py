@@ -7,18 +7,15 @@ author: https://github.com/vincenzopalazzo
 """
 from typing import Sequence
 
-
-class Entry:
-    def __init__(self, value: int, weight: int):
-        self.value = value
-        self.weight = weight
+from .knapsack_comm import Entry
 
 
 def knapsack_dp(inputs: Sequence[Entry], capacity: int) -> int:
     """Knapsack problem resolved with dynamic programming implementation
     with a specie optimization implementation.
 
-    :param inputs: the input of the problem
+    :param inputs: the input of the problem.
+    :param capacity: capacity of the knapsack.
     :return the maximum capacity calculated from the import
     """
     table = [[-1 for _ in range(capacity + 1)] for _ in range(len(inputs) + 1)]

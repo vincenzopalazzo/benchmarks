@@ -1,6 +1,7 @@
 """Testing the implementation with some small input"""
 
-from benchamarks.bm.knapsack_greedy import Entry, knapsack_greedy
+from benchamarks.bm.knapsack_greedy import knapsack_greedy
+from benchamarks.bm.knapsack_comm import Entry
 
 
 def test_knapsack_greedy_one() -> None:

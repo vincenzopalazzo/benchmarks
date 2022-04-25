@@ -12,7 +12,7 @@ The languages supported with now are:
 
 - [ ] C
 - [ ] C++
-- [ ] Python
+- [X] Python
 - [ ] Go lang
 - [X] V lang
 
