@@ -64,7 +64,7 @@ def knapsack_branching(inputs: Sequence[Entry], capacity: int) -> int:
         if node_u.level == -1:
             node_v.level += 1
 
-        if node_u.level == len(inputs)-1:
+        if node_u.level == len(inputs) - 1:
             continue
 
         node_v.level += 1
