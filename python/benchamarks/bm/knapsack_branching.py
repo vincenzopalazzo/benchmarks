@@ -5,9 +5,11 @@ to get the maximum total value in the knapsack
 
 author: https://github.com/vincenzopalazzo
 """
+import functools
+import logging
 import queue
 from typing import Sequence
-from python.benchamarks.bm.knapsack_comm import Entry
+from benchamarks.bm.knapsack_comm import Entry
 
 
 class Node:
@@ -17,12 +19,45 @@ class Node:
         self.bound = bound
         self.weight = weight
 
+    def compute_bound(self, inputs: Sequence[Entry], capacity: int) -> None:
+        """Find the upper bound on the maximum profit in the subtree rooted to this node.
 
-def cmp_items(a: Entry, b: Entry) -> bool:
+        :param inputs: the input sequence of the values
+        :param capacity: the capacity of the knapsack.
+        :return the local maximum profit calculated in the subtree.
+        """
+        if self.weight >= capacity:
+            return 0
+        profit_bound = self.profit
+        next_level = self.level + 1
+        tot_weight = self.weight
+
+        while (next_level < len(inputs)) and (
+            tot_weight + inputs[next_level].weight <= capacity
+        ):
+            tot_weight += inputs[next_level].weight
+            profit_bound += inputs[next_level].value
+            next_level += 1
+
+        if next_level < len(inputs):
+            # if we exit before without reach the leaf of the tree
+            # we include the last item partially
+            profit_bound += (capacity - tot_weight) * (
+                inputs[next_level].value / inputs[next_level].weight
+            )
+
+        self.bound = profit_bound
+
+
+def cmp_items(a: Entry, b: Entry) -> int:
     """Compare to entry items"""
     r1 = a.value / a.weight
     r2 = b.value / b.weight
-    return r1 > r2
+    if r1 > r2:
+        return 1
+    elif r1 < r2:
+        return -1
+    return 0
 
 
 def knapsack_branching(inputs: Sequence[Entry], capacity: int) -> int:
@@ -50,19 +85,19 @@ def knapsack_branching(inputs: Sequence[Entry], capacity: int) -> int:
     :param capacity: capacity of the knapsack.
     :return the maximum value calculated by the algorith.
     """
-    sorted(inputs, cmp_items)
+    inputs.sort(key=functools.cmp_to_key(cmp_items))
     queue_nodes = queue.Queue()
 
     node_u = Node(level=-1, profit=0, bound=0, weight=0.0)
+    node_v = Node(level=-1, profit=0, bound=0, weight=0.0)
     queue_nodes.put(node_u)
 
     max_profit = 0
 
     while not queue_nodes.empty():
         node_u = queue_nodes.get()
-        node_v = Node(level=-1, profit=0, bound=0, weight=0.0)
         if node_u.level == -1:
-            node_v.level += 1
+            node_v.level = 0
 
         if node_u.level == len(inputs) - 1:
             continue
@@ -75,4 +110,15 @@ def knapsack_branching(inputs: Sequence[Entry], capacity: int) -> int:
         if node_v.weight <= capacity and node_v.profit > max_profit:
             max_profit = node_v.profit
 
-    return 0
+        node_v.compute_bound(inputs, capacity)
+
+        if node_v.bound > max_profit:
+            queue_nodes.put(node_v)
+
+        node_v.weight = node_u.weight
+        node_v.profit = node_u.profit
+        node_v.compute_bound(inputs, capacity)
+        if node_v.bound > max_profit:
+            queue_nodes.put(node_v)
+
+    return max_profit
