@@ -1,4 +1,4 @@
-name: vlang-build-pipeline
+name: V benchmarks CI
 
 on:
   push:

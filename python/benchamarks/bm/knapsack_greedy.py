@@ -8,23 +8,7 @@ so, we implement an alternative to the algorithm.
 author: https://github.com/vincenzopalazzo
 """
 from typing import Sequence
-
-
-class Entry:
-    """Wrapping around the input of th problem,
-    just to keep the code more readable"""
-
-    def __init__(self, value: int, weight: int):
-        self.value = value
-        self.weight = weight
-
-    def ratio(self) -> int:
-        """This is the core of the fractional knapsack problem
-        solution"""
-        return self.value // self.weight
-
-    def __lt__(self, other):
-        return self.ratio() < other.ratio()
+from .knapsack_comm import Entry
 
 
 def knapsack_greedy(inputs: Sequence[Entry], capacity: int) -> int:
